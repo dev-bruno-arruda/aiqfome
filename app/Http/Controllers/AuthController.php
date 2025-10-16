@@ -54,4 +54,12 @@ class AuthController extends Controller
             Response::HTTP_OK
         );
     }
+
+    public function adminCheck(Request $request): JsonResponse
+    {
+        return response()->json([
+            'is_admin' => true,
+            'message' => 'Admin access granted'
+        ], 200);
+    }
 }
