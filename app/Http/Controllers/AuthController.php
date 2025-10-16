@@ -9,7 +9,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Log;
 class AuthController extends Controller
 {
     protected $authService;
@@ -21,6 +21,7 @@ class AuthController extends Controller
 
     public function login(AuthRequest $request): JsonResponse
     {
+        Log::info('Login request', ['email' => $request->email, 'password' => $request->password]);
         try {
             $response = $this->authService->login($request->email, $request->password);
         } catch (\Exception $e) {
