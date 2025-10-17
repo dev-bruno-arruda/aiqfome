@@ -21,6 +21,48 @@ class FavoriteController extends Controller
     }
 
     /**
+     * Trata erros específicos de favoritos
+     */
+    private function handleFavoriteError(\Exception $e, string $operation): JsonResponse
+    {
+        $message = $e->getMessage();
+        
+        if ($this->isDuplicateFavoriteError($message)) {
+            return ApiResponse::error('favorites.create.already_exists', [], 422);
+        }
+        
+        if ($this->isCustomerNotFoundError($message)) {
+            return ApiResponse::error('favorites.customer_not_found', [], 404);
+        }
+        
+        if ($this->isProductNotFoundError($message)) {
+            return ApiResponse::error('favorites.product_not_found', [], 404);
+        }
+        
+        return ApiResponse::error("favorites.{$operation}.error", [], 422);
+    }
+
+    /**
+     * Verifica se é erro de produto já favoritado
+     */
+    private function isDuplicateFavoriteError(string $message): bool
+    {
+        return str_contains($message, 'already_exists') || 
+               str_contains($message, 'já está nos favoritos') ||
+               str_contains($message, 'already in this customer');
+    }
+
+    /**
+     * Verifica se é erro de cliente não encontrado
+     */
+    private function isCustomerNotFoundError(string $message): bool
+    {
+        return str_contains($message, 'customer_not_found') || 
+               str_contains($message, 'Cliente não encontrado');
+    }
+
+
+    /**
      * @OA\Get(
      *     path="/customers/{customerId}/favorites",
      *     tags={"Favorites"},
@@ -73,7 +115,7 @@ class FavoriteController extends Controller
                 'favorites' => FavoriteResource::collection($favorites)
             ]);
         } catch (\Exception $e) {
-            return ApiResponse::error('favorites.list.error');
+            return $this->handleFavoriteError($e, 'list');
         }
     }
 
@@ -122,7 +164,14 @@ class FavoriteController extends Controller
      *     @OA\Response(
      *         response=422,
      *         description="Dados inválidos ou produto já favoritado",
-     *         @OA\JsonContent(ref="#/components/schemas/ValidationError")
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="object", 
+     *                 @OA\Property(property="key", type="string", example="favorites.create.already_exists"),
+     *                 @OA\Property(property="text", type="string", example="Produto já está nos favoritos deste cliente")
+     *             ),
+     *             @OA\Property(property="status", type="string", example="error"),
+     *             @OA\Property(property="data", type="array", @OA\Items())
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -146,7 +195,7 @@ class FavoriteController extends Controller
                 'favorite' => new FavoriteResource($favorite)
             ], 201);
         } catch (\Exception $e) {
-            return ApiResponse::error('favorites.create.error', [], 422);
+            return $this->handleFavoriteError($e, 'create');
         }
     }
 
@@ -215,7 +264,7 @@ class FavoriteController extends Controller
                 'favorite' => new FavoriteResource($favorite)
             ]);
         } catch (\Exception $e) {
-            return ApiResponse::error('favorites.show.error');
+            return $this->handleFavoriteError($e, 'show');
         }
     }
 
@@ -266,7 +315,7 @@ class FavoriteController extends Controller
 
             return ApiResponse::success('favorites.delete.success');
         } catch (\Exception $e) {
-            return ApiResponse::error('favorites.delete.error');
+            return $this->handleFavoriteError($e, 'delete');
         }
     }
 
@@ -317,7 +366,7 @@ class FavoriteController extends Controller
                 'is_favorited' => $isFavorited
             ]);
         } catch (\Exception $e) {
-            return ApiResponse::error('favorites.check.error');
+            return $this->handleFavoriteError($e, 'check');
         }
     }
 }
