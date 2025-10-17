@@ -360,7 +360,7 @@ make dcu           # Atualiza dependências
 - ✅ Validação padronizada
 - ✅ Middleware de formatação de erros
 
-- **Email:** [admin@aiqfome.com](mailto:admin@aiqfome.com)
+- **Email:** [bruno.arruda@aiqfome.com](mailto:bruno.arruda@aiqfome.com) (Quem sabe?)
 - **Documentação:** [http://localhost/api/documentation](http://localhost/api/documentation)
 
 ### Qualquer problema encontrato, pode ser reportado para [brunowolly@hotmail.com](mailto:brunowolly@hotmail.com)
