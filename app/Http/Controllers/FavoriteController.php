@@ -20,9 +20,6 @@ class FavoriteController extends Controller
         $this->favoriteService = $favoriteService;
     }
 
-    /**
-     * Trata erros específicos de favoritos
-     */
     private function handleFavoriteError(\Exception $e, string $operation): JsonResponse
     {
         $message = $e->getMessage();
@@ -42,9 +39,6 @@ class FavoriteController extends Controller
         return ApiResponse::error("favorites.{$operation}.error", [], 422);
     }
 
-    /**
-     * Verifica se é erro de produto já favoritado
-     */
     private function isDuplicateFavoriteError(string $message): bool
     {
         return str_contains($message, 'already_exists') || 
