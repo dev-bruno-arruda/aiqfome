@@ -17,6 +17,9 @@ return [
             'access_granted' => 'Admin access granted',
             'access_denied' => 'Access denied',
         ],
+        'token' => [
+            'status' => 'Token status verified successfully',
+        ],
     ],
     'customers' => [
         'list' => [

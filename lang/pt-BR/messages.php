@@ -17,6 +17,9 @@ return [
             'access_granted' => 'Acesso de administrador concedido',
             'access_denied' => 'Acesso negado',
         ],
+        'token' => [
+            'status' => 'Status do token verificado com sucesso',
+        ],
     ],
     'customers' => [
         'list' => [
