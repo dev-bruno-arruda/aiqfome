@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-
+use App\Http\Controllers\CustomerController;
 // Public routes
 Route::post('/login', [AuthController::class, 'login']);
 
@@ -15,4 +15,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::middleware('admin.role')->group(function () {
         Route::get('/admin-check', [AuthController::class, 'adminCheck']);
     });
+
+     // Customer routes
+     Route::apiResource('customers', CustomerController::class);
 });
