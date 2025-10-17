@@ -2,6 +2,7 @@
 
 help:
 	@echo "Please choose what you want to do:"
+	@echo "  make up: start docker container, install dependencies and setup environment"
 	@echo "  make dup: start docker container"
 	@echo "  make ddw: stop docker container"
 	@echo "  make drs: restart docker container"
@@ -19,7 +20,14 @@ help:
 	@echo "  make swagger: generate Swagger documentation"
 
 up:
-	cp .env.example .env; ./vendor/bin/sail up -d --build
+	cp .env.example .env; \
+	if [ ! -f ./vendor/bin/sail ]; then \
+		echo "Installing dependencies first..."; \
+		composer install; \
+	fi; \
+	./vendor/bin/sail up -d --build; \
+	sleep 10; \
+	./vendor/bin/sail composer install
 
 dup:
 	./vendor/bin/sail up -d
