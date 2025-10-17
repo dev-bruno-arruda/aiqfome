@@ -7,8 +7,6 @@ use App\Http\Requests\FavoriteRequest;
 use App\Http\Resources\FavoriteResource;
 use App\Helpers\ApiResponse;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use OpenApi\Annotations as OA;
 
 class FavoriteController extends Controller
