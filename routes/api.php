@@ -10,6 +10,7 @@ Route::post('/login', [AuthController::class, 'login']);
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/profile', [AuthController::class, 'profile'])->name('user.show');
+    Route::get('/token-status', [AuthController::class, 'tokenStatus'])->name('token.status');
     Route::post('/logout', [AuthController::class, 'logout']);
     
     // Admin only routes

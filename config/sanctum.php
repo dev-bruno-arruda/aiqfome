@@ -47,7 +47,7 @@ return [
     |
     */
 
-    'expiration' => null,
+    'expiration' => env('SANCTUM_EXPIRATION_DAYS', 30) * 24 * 60, // dias convertidos para minutos
 
     /*
     |--------------------------------------------------------------------------

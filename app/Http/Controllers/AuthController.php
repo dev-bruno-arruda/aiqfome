@@ -49,4 +49,10 @@ class AuthController extends Controller
     {
         return ApiResponse::boolean(true, 'auth.admin.access_granted');
     }
+
+    public function tokenStatus(Request $request): JsonResponse
+    {
+        $tokenInfo = $this->authService->getTokenInfo($request);
+        return ApiResponse::success('auth.token.status', $tokenInfo);
+    }
 }

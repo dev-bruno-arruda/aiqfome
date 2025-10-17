@@ -18,7 +18,8 @@ class AuthService
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
-        $token = $user->createToken(env('APP_NAME'))->plainTextToken;
+        $expirationDays = (int) env('SANCTUM_EXPIRATION_DAYS', 30);
+        $token = $user->createToken(env('APP_NAME'), ['*'], now()->addDays($expirationDays))->plainTextToken;
         $role = $user->role;
 
         return ['token' => $token, 'role' => $role];
@@ -31,6 +32,16 @@ class AuthService
     public function getUser($request): User
     {
         return $request->user();
+    }
+
+    public function getTokenInfo($request): array
+    {
+        $token = $request->user()->currentAccessToken();
+        return [
+            'expires_at' => $token->expires_at,
+            'created_at' => $token->created_at,
+            'days_until_expiry' => $token->expires_at ? now()->diffInDays($token->expires_at, false) : null,
+        ];
     }
 
     public function updatePassword(User $user, string $currentPassword, string $newPassword): void
