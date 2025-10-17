@@ -4,6 +4,9 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Helpers\ApiResponse;
 
 class CustomerRequest extends FormRequest
 {
@@ -51,5 +54,16 @@ class CustomerRequest extends FormRequest
             'name' => 'nome',
             'email' => 'e-mail',
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        if ($this->expectsJson()) {
+            throw new HttpResponseException(
+                ApiResponse::validationError($validator->errors()->toArray(), 'validation.failed')
+            );
+        }
+
+        parent::failedValidation($validator);
     }
 }

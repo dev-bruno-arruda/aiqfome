@@ -83,6 +83,7 @@ return [
         'min' => 'O campo :field deve ter pelo menos :min caracteres',
         'integer' => 'O campo :field deve ser um número inteiro',
         'unique' => 'O campo :field já está em uso',
+        'failed' => 'Os dados fornecidos são inválidos',
     ],
     'errors' => [
         'server_error' => 'Ocorreu um erro no servidor',

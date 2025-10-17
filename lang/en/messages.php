@@ -83,6 +83,7 @@ return [
         'min' => 'The :field must be at least :min characters',
         'integer' => 'The :field must be an integer',
         'unique' => 'The :field has already been taken',
+        'failed' => 'The given data was invalid',
     ],
     'errors' => [
         'server_error' => 'An error occurred on the server',

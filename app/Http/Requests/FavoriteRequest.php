@@ -3,6 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Helpers\ApiResponse;
 
 class FavoriteRequest extends FormRequest
 {
@@ -36,5 +39,16 @@ class FavoriteRequest extends FormRequest
         return [
             'product_id' => 'ID do produto',
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        if ($this->expectsJson()) {
+            throw new HttpResponseException(
+                ApiResponse::validationError($validator->errors()->toArray(), 'validation.failed')
+            );
+        }
+
+        parent::failedValidation($validator);
     }
 }
