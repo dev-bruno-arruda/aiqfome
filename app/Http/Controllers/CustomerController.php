@@ -19,6 +19,50 @@ class CustomerController extends Controller
     {
         $this->customerService = $customerService;
     }
+    /**
+     * @OA\Get(
+     *     path="/customers",
+     *     tags={"Customers"},
+     *     summary="Listar clientes",
+     *     description="Retorna uma lista paginada de clientes com opção de busca",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="Número de itens por página",
+     *         required=false,
+     *         @OA\Schema(type="integer", example=15)
+     *     ),
+     *     @OA\Parameter(
+     *         name="search",
+     *         in="query",
+     *         description="Termo de busca",
+     *         required=false,
+     *         @OA\Schema(type="string", example="João")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Clientes listados com sucesso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="object", @OA\Property(property="key", type="string"), @OA\Property(property="text", type="string")),
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="customers", type="array", @OA\Items(type="object")),
+     *                 @OA\Property(property="pagination", type="object",
+     *                     @OA\Property(property="current_page", type="integer", example=1),
+     *                     @OA\Property(property="last_page", type="integer", example=5),
+     *                     @OA\Property(property="per_page", type="integer", example=15),
+     *                     @OA\Property(property="total", type="integer", example=75)
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Token inválido ou expirado"
+     *     )
+     * )
+     */
     public function index(Request $request): JsonResponse
     {
         try {
@@ -45,6 +89,49 @@ class CustomerController extends Controller
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/customers",
+     *     tags={"Customers"},
+     *     summary="Criar cliente",
+     *     description="Cria um novo cliente",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name","email"},
+     *             @OA\Property(property="name", type="string", example="João Silva"),
+     *             @OA\Property(property="email", type="string", format="email", example="joao@example.com")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Cliente criado com sucesso",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="object", @OA\Property(property="key", type="string"), @OA\Property(property="text", type="string")),
+     *             @OA\Property(property="status", type="string", example="success"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="customer", type="object",
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="name", type="string", example="João Silva"),
+     *                     @OA\Property(property="email", type="string", example="joao@example.com"),
+     *                     @OA\Property(property="created_at", type="string", format="date-time"),
+     *                     @OA\Property(property="updated_at", type="string", format="date-time")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Dados inválidos",
+     *         @OA\JsonContent(ref="#/components/schemas/ValidationError")
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Token inválido ou expirado"
+     *     )
+     * )
+     */
     public function store(CustomerRequest $request): JsonResponse
     {
         try {

@@ -1,8 +1,16 @@
+# Logs
 *.log
-.DS_Store
+/storage/logs/*.log
+
+# Environment files
 .env
 .env.backup
 .env.production
+.env.local
+.env.testing
+
+# IDE files
+.DS_Store
 .phpactor.json
 .phpunit.result.cache
 /.fleet
@@ -12,13 +20,37 @@
 /.vscode
 /.zed
 /auth.json
+Thumbs.db
+
+# Dependencies
 /node_modules
+/vendor
+
+# Build files
 /public/build
 /public/hot
 /public/storage
+
+# Storage
 /storage/*.key
 /storage/pail
-/vendor
+/storage/app/public/*
+!/storage/app/public/.gitkeep
+
+# Swagger documentation (optional - uncomment if you want to ignore generated docs)
+# /storage/api-docs
+
+# Testing
+/.phpunit.cache
+/coverage
+
+# Homestead
 Homestead.json
 Homestead.yaml
-Thumbs.db
+
+# Docker
+docker-compose.override.yml
+
+# Temporary files
+*.tmp
+*.temp
