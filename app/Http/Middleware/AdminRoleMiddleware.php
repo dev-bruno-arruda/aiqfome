@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Helpers\ApiResponse;
 
 class AdminRoleMiddleware
 {
@@ -18,10 +19,7 @@ class AdminRoleMiddleware
         $user = $request->user();
         
         if (!$user || $user->role !== 'admin') {
-            return response()->json([
-                'message' => 'Access denied.',
-                'status' => 'error'
-            ], 403);
+            return ApiResponse::error('auth.admin.access_denied', [], 403);
         }
         
         return $next($request);

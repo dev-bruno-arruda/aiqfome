@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\AuthService;
 use App\Http\Requests\AuthRequest;
+use App\Helpers\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\UserResource;
@@ -24,42 +25,28 @@ class AuthController extends Controller
         Log::info('Login request', ['email' => $request->email, 'password' => $request->password]);
         try {
             $response = $this->authService->login($request->email, $request->password);
+            return ApiResponse::success('auth.login.success', $response);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Login fail',
-                'status' => 'error'
-            ], 422);
+            return ApiResponse::error('auth.login.failed');
         }
-        return response()->json($response, 200);
     }
 
     public function logout(Request $request): JsonResponse
     {
         $this->authService->logout($request);
-
-        return response()->json(['message' => 'Logged out successfully'], 200);
+        return ApiResponse::success('auth.logout.success');
     }
 
-    public function profile(Request $request): JsonResponse | JsonResource
+    public function profile(Request $request): JsonResponse
     {
-
         $user = $this->authService->getUser($request);
-
-        return response()->json(
-            [
-                'message' => 'User retrieved successfully',
-                'status' => 'success',
-                'data' => new UserResource($user)
-            ],
-            Response::HTTP_OK
-        );
+        return ApiResponse::success('auth.profile.retrieved', [
+            'user' => new UserResource($user)
+        ]);
     }
 
     public function adminCheck(Request $request): JsonResponse
     {
-        return response()->json([
-            'is_admin' => true,
-            'message' => 'Admin access granted'
-        ], 200);
+        return ApiResponse::boolean(true, 'auth.admin.access_granted');
     }
 }

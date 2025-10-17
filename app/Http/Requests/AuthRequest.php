@@ -23,9 +23,9 @@ class AuthRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'email.required' => 'The email field is required.',
-            'email.email' => 'The email must be a valid email address.',
-            'password.required' => 'The password field is required.',
+            'email.required' => __('messages.validation.required', ['field' => 'email']),
+            'email.email' => __('messages.validation.email', ['field' => 'email']),
+            'password.required' => __('messages.validation.password', ['field' => 'password']),
         ];
     }
 }
