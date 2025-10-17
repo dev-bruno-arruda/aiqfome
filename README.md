@@ -2,12 +2,16 @@
 
 API REST para sistema de gerenciamento de produtos favoritos, desenvolvida com Laravel 11 e documentada com Swagger.
 
+Utilizei Laravel por ter muita familiaridade com o framework. Tenho vários projetos pessoais que utilizam basicamente a mesma estruta de autenticação e autorização, resources, services, query filter, etc.
+O Uso do Makefile é opcional, porém muito recomendado. Também é uma prática em projetos, pelo menos para facilitar no desenvolvimento.
+Até mesmo esse Readme já possui esse formato há pelo menos 5 anos. :)
+
 ## 🚀 Características
 
 - **Autenticação JWT** com Laravel Sanctum
 - **Internacionalização (i18n)** completa (PT-BR/EN)
 - **Documentação Swagger** interativa
-- **Sistema de Roles** (admin/employee/user)
+- **Sistema de Roles** (admin/employee)
 - **CRUD de Clientes** com paginação e busca
 - **Sistema de Favoritos** integrado com API externa
 - **Validação padronizada** com respostas estruturadas
@@ -353,7 +357,7 @@ make dcu           # Atualiza dependências
 
 - ✅ Sistema de autenticação com Sanctum
 - ✅ CRUD completo de clientes
-- ✅ Sistema de favoritos
+- ✅ Sistema de favorito
 - ✅ Internacionalização (PT-BR/EN)
 - ✅ Documentação Swagger
 - ✅ Sistema de roles
