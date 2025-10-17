@@ -37,7 +37,7 @@ class FavoriteService
         // Validate customer exists
         $customer = Customer::find($customerId);
         if (!$customer) {
-            throw new \Exception('Cliente não encontrado.');
+            throw new \Exception(__('messages.favorites.customer_not_found'));
         }
 
         // Validate product exists in external API and sync to local database
@@ -45,7 +45,7 @@ class FavoriteService
         $product = $fakeStoreService->syncProduct($productId);
         
         if (!$product) {
-            throw new \Exception('Produto não encontrado na API externa.');
+            throw new \Exception(__('messages.favorites.product_not_found'));
         }
 
         // Check if already favorited
@@ -54,7 +54,7 @@ class FavoriteService
             ->first();
 
         if ($existingFavorite) {
-            throw new \Exception('Produto já está nos favoritos deste cliente.');
+            throw new \Exception(__('messages.favorites.create.already_exists'));
         }
 
         return Favorite::create([

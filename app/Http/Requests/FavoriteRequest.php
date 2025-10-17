@@ -25,9 +25,9 @@ class FavoriteRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'product_id.required' => 'O ID do produto é obrigatório.',
-            'product_id.integer' => 'O ID do produto deve ser um número inteiro.',
-            'product_id.min' => 'O ID do produto deve ser maior que zero.',
+            'product_id.required' => __('messages.validation.required', ['field' => 'ID do produto']),
+            'product_id.integer' => __('messages.validation.integer', ['field' => 'ID do produto']),
+            'product_id.min' => __('messages.validation.min', ['field' => 'ID do produto', 'min' => 1]),
         ];
     }
 

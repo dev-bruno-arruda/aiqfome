@@ -35,14 +35,14 @@ class CustomerRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'O nome é obrigatório.',
-            'name.string' => 'O nome deve ser uma string.',
-            'name.max' => 'O nome não pode ter mais de 255 caracteres.',
-            'name.min' => 'O nome deve ter pelo menos 2 caracteres.',
-            'email.required' => 'O e-mail é obrigatório.',
-            'email.email' => 'O e-mail deve ter um formato válido.',
-            'email.max' => 'O e-mail não pode ter mais de 255 caracteres.',
-            'email.unique' => 'Este e-mail já está em uso por outro cliente.',
+            'name.required' => __('messages.validation.required', ['field' => 'nome']),
+            'name.string' => __('messages.validation.string', ['field' => 'nome']),
+            'name.max' => __('messages.validation.max', ['field' => 'nome', 'max' => 255]),
+            'name.min' => __('messages.validation.min', ['field' => 'nome', 'min' => 2]),
+            'email.required' => __('messages.validation.required', ['field' => 'e-mail']),
+            'email.email' => __('messages.validation.email', ['field' => 'e-mail']),
+            'email.max' => __('messages.validation.max', ['field' => 'e-mail', 'max' => 255]),
+            'email.unique' => __('messages.validation.unique', ['field' => 'e-mail']),
         ];
     }
     public function attributes(): array

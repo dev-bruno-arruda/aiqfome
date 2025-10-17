@@ -58,7 +58,7 @@ class CustomerService
     private function validateEmailUniqueness(string $email): void
     {
         if (Customer::where('email', $email)->exists()) {
-            throw new \Exception('Email já está em uso por outro cliente.');
+            throw new \Exception(__('messages.customers.email_already_exists'));
         }
     }
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\FavoriteService;
 use App\Http\Requests\FavoriteRequest;
 use App\Http\Resources\FavoriteResource;
+use App\Helpers\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -23,18 +24,11 @@ class FavoriteController extends Controller
     {
         try {
             $favorites = $this->favoriteService->getCustomerFavorites($customerId);
-
-            return response()->json([
-                'message' => 'Favoritos listados com sucesso',
-                'status' => 'success',
-                'data' => FavoriteResource::collection($favorites)
-            ], Response::HTTP_OK);
+            return ApiResponse::success('favorites.list.success', [
+                'favorites' => FavoriteResource::collection($favorites)
+            ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Erro ao listar favoritos',
-                'status' => 'error',
-                'error' => $e->getMessage()
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return ApiResponse::error('favorites.list.error');
         }
     }
 
@@ -46,17 +40,11 @@ class FavoriteController extends Controller
                 $request->validated()['product_id']
             );
 
-            return response()->json([
-                'message' => 'Produto adicionado aos favoritos com sucesso',
-                'status' => 'success',
-                'data' => new FavoriteResource($favorite)
-            ], Response::HTTP_CREATED);
+            return ApiResponse::success('favorites.create.success', [
+                'favorite' => new FavoriteResource($favorite)
+            ], 201);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Erro ao adicionar favorito',
-                'status' => 'error',
-                'error' => $e->getMessage()
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            return ApiResponse::error('favorites.create.error', [], 422);
         }
     }
 
@@ -66,23 +54,14 @@ class FavoriteController extends Controller
             $favorite = $this->favoriteService->getFavorite($customerId, $productId);
 
             if (!$favorite) {
-                return response()->json([
-                    'message' => 'Favorito não encontrado',
-                    'status' => 'error'
-                ], Response::HTTP_NOT_FOUND);
+                return ApiResponse::error('favorites.show.not_found', [], 404);
             }
 
-            return response()->json([
-                'message' => 'Favorito encontrado com sucesso',
-                'status' => 'success',
-                'data' => new FavoriteResource($favorite)
-            ], Response::HTTP_OK);
+            return ApiResponse::success('favorites.show.success', [
+                'favorite' => new FavoriteResource($favorite)
+            ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Erro ao buscar favorito',
-                'status' => 'error',
-                'error' => $e->getMessage()
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return ApiResponse::error('favorites.show.error');
         }
     }
 
@@ -92,22 +71,12 @@ class FavoriteController extends Controller
             $deleted = $this->favoriteService->removeFromFavorites($customerId, $productId);
 
             if (!$deleted) {
-                return response()->json([
-                    'message' => 'Favorito não encontrado',
-                    'status' => 'error'
-                ], Response::HTTP_NOT_FOUND);
+                return ApiResponse::error('favorites.delete.not_found', [], 404);
             }
 
-            return response()->json([
-                'message' => 'Produto removido dos favoritos com sucesso',
-                'status' => 'success'
-            ], Response::HTTP_OK);
+            return ApiResponse::success('favorites.delete.success');
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Erro ao remover favorito',
-                'status' => 'error',
-                'error' => $e->getMessage()
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return ApiResponse::error('favorites.delete.error');
         }
     }
 
@@ -116,19 +85,11 @@ class FavoriteController extends Controller
         try {
             $isFavorited = $this->favoriteService->isFavorited($customerId, $productId);
 
-            return response()->json([
-                'message' => 'Status do favorito verificado com sucesso',
-                'status' => 'success',
-                'data' => [
-                    'is_favorited' => $isFavorited
-                ]
-            ], Response::HTTP_OK);
+            return ApiResponse::success('favorites.check.success', [
+                'is_favorited' => $isFavorited
+            ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Erro ao verificar favorito',
-                'status' => 'error',
-                'error' => $e->getMessage()
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return ApiResponse::error('favorites.check.error');
         }
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Services\CustomerService;
 use App\Http\Requests\CustomerRequest;
 use App\Http\Resources\CustomerResource;
+use App\Helpers\ApiResponse;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -30,23 +31,17 @@ class CustomerController extends Controller
                 $customers = $this->customerService->getAllCustomers($perPage);
             }
 
-            return response()->json([
-                'message' => 'Clientes listados com sucesso',
-                'status' => 'success',
-                'data' => CustomerResource::collection($customers->items()),
+            return ApiResponse::success('customers.list.success', [
+                'customers' => CustomerResource::collection($customers->items()),
                 'pagination' => [
                     'current_page' => $customers->currentPage(),
                     'last_page' => $customers->lastPage(),
                     'per_page' => $customers->perPage(),
                     'total' => $customers->total(),
                 ]
-            ], Response::HTTP_OK);
+            ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Erro ao listar clientes',
-                'status' => 'error',
-                'error' => $e->getMessage()
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return ApiResponse::error('customers.list.error');
         }
     }
 
@@ -54,18 +49,11 @@ class CustomerController extends Controller
     {
         try {
             $customer = $this->customerService->createCustomer($request->validated());
-
-            return response()->json([
-                'message' => 'Cliente criado com sucesso',
-                'status' => 'success',
-                'data' => new CustomerResource($customer)
-            ], Response::HTTP_CREATED);
+            return ApiResponse::success('customers.create.success', [
+                'customer' => new CustomerResource($customer)
+            ], 201);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Erro ao criar cliente',
-                'status' => 'error',
-                'error' => $e->getMessage()
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            return ApiResponse::error('customers.create.error', [], 422);
         }
     }
 
@@ -75,23 +63,14 @@ class CustomerController extends Controller
             $customer = $this->customerService->getCustomerById($id);
 
             if (!$customer) {
-                return response()->json([
-                    'message' => 'Cliente não encontrado',
-                    'status' => 'error'
-                ], Response::HTTP_NOT_FOUND);
+                return ApiResponse::error('customers.show.not_found', [], 404);
             }
 
-            return response()->json([
-                'message' => 'Cliente encontrado com sucesso',
-                'status' => 'success',
-                'data' => new CustomerResource($customer)
-            ], Response::HTTP_OK);
+            return ApiResponse::success('customers.show.success', [
+                'customer' => new CustomerResource($customer)
+            ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Erro ao buscar cliente',
-                'status' => 'error',
-                'error' => $e->getMessage()
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return ApiResponse::error('customers.show.error');
         }
     }
 
@@ -101,23 +80,14 @@ class CustomerController extends Controller
             $customer = $this->customerService->updateCustomer($id, $request->validated());
 
             if (!$customer) {
-                return response()->json([
-                    'message' => 'Cliente não encontrado',
-                    'status' => 'error'
-                ], Response::HTTP_NOT_FOUND);
+                return ApiResponse::error('customers.update.not_found', [], 404);
             }
 
-            return response()->json([
-                'message' => 'Cliente atualizado com sucesso',
-                'status' => 'success',
-                'data' => new CustomerResource($customer)
-            ], Response::HTTP_OK);
+            return ApiResponse::success('customers.update.success', [
+                'customer' => new CustomerResource($customer)
+            ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Erro ao atualizar cliente',
-                'status' => 'error',
-                'error' => $e->getMessage()
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+            return ApiResponse::error('customers.update.error', [], 422);
         }
     }
 
@@ -127,22 +97,12 @@ class CustomerController extends Controller
             $deleted = $this->customerService->deleteCustomer($id);
 
             if (!$deleted) {
-                return response()->json([
-                    'message' => 'Cliente não encontrado',
-                    'status' => 'error'
-                ], Response::HTTP_NOT_FOUND);
+                return ApiResponse::error('customers.delete.not_found', [], 404);
             }
 
-            return response()->json([
-                'message' => 'Cliente removido com sucesso',
-                'status' => 'success'
-            ], Response::HTTP_OK);
+            return ApiResponse::success('customers.delete.success');
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Erro ao remover cliente',
-                'status' => 'error',
-                'error' => $e->getMessage()
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            return ApiResponse::error('customers.delete.error');
         }
     }
 }
